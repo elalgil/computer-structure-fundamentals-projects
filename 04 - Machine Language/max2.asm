@@ -1,0 +1,27 @@
+(START)
+	@R1
+	D=M
+	@R2
+	D=D-M
+	@R1G
+	D;JGE
+	@R2G
+	0;JMP
+(R1G)
+	@R1
+	D=M
+	@R0
+	M=D
+	@END
+	0;JMP
+(R2G)
+	@R2
+	D=M
+	@R0
+	M=D
+	@END
+	0;JMP
+(END)
+	@END
+	0;JMP
+
