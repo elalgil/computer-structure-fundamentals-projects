@@ -1,0 +1,90 @@
+// This file is part of nand2tetris, as taught in The Hebrew University, and
+// was written by Aviv Yaish. It is an extension to the specifications given
+// [here](https://www.nand2tetris.org) (Shimon Schocken and Noam Nisan, 2017),
+// as allowed by the Creative Common Attribution-NonCommercial-ShareAlike 3.0
+// Unported [License](https://creativecommons.org/licenses/by-nc-sa/3.0/).
+
+// This chip is an extension of the regular CPU that uses the extended ALU.
+// If instruction[15]==0 or (instruction[14]==1 and instruction[13]==1),
+// then CpuMul behaves exactly the same as the regular CPU.
+// If instruction[15]==1 and instruction[14]==0 the chip will behave as follows:
+// | Instruction           | 15 | 14 | 13 | a | c1 | c2 | c3 | c4 | c5 | c6 |
+// |-----------------------|:--:|:--:|:--:|:-:|:--:|:--:|:--:|:--:|:--:|:--:|
+// | Regular a-instruction |  0 |  * |  * | * |  * |  * |  * |  * |  * |  * |
+// | Regular c-instruction |  1 |  1 |  1 | * |  * |  * |  * |  * |  * |  * |
+// | dest=A<<;jump         |  1 |  0 |  1 | 0 |  1 |  0 |  0 |  0 |  0 |  0 |
+// | dest=D<<;jump         |  1 |  0 |  1 | 0 |  1 |  1 |  0 |  0 |  0 |  0 |
+// | dest=M<<;jump         |  1 |  0 |  1 | 1 |  1 |  0 |  0 |  0 |  0 |  0 |
+// | dest=A>>;jump         |  1 |  0 |  1 | 0 |  0 |  0 |  0 |  0 |  0 |  0 |
+// | dest=D>>;jump         |  1 |  0 |  1 | 0 |  0 |  1 |  0 |  0 |  0 |  0 |
+// | dest=M>>;jump         |  1 |  0 |  1 | 1 |  0 |  0 |  0 |  0 |  0 |  0 |
+// Where:
+// - "<<" is a left shift, and ">>" is a right shift, as defined in project 2.
+//   These notations were chosen because they are used in real programming
+//   languages.
+// - dest and jump can take the same values as in the regular CPU.
+
+CHIP CpuMul {
+    IN  
+        inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset=1) or continue executing
+                         // the current program (reset=0).
+    OUT 
+        outM[16],        // M value output
+        writeM,          // Write into M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+    
+    PARTS:
+    // Put your code here:
+	
+	// Regular CPU with extendedALU
+	Mux16(a=instruction ,b=outALU ,sel=instruction[15] ,out=chooseA);
+	
+	Mux(a=true, b=instruction[5], sel=instruction[15], out=openA);
+	ARegister(in=chooseA ,load=openA ,out=outA, out[0..14]=addressM2);
+	
+	And(a=instruction[4], b=instruction[15], out=openD);
+	DRegister(in=outALU ,load=openD ,out=outD);
+	
+	Mux16(a=outA ,b=inM ,sel=instruction[12] ,out=AorM);
+	
+	ExtendAlu(x=outD ,y=AorM , instruction= instruction[6..14] ,out=outALU, out=outM2 ,zr=outZr ,ng=outNg);
+	
+	//j3 = instruction[0]
+	//j2 = instruction[1]
+	//j1 = instruction[2]
+	//gt = ~(zr) & ~(ng)
+	//shouldJump = (j3 & gt) | (j2 & zr) | (j1 & ng)
+	
+	Not(in=outZr, out=nZr);
+	Not(in=outNg, out=nNg);
+	And(a=nZr, b=nNg, out=gtRes);
+	
+	And(a=outNg, b=instruction[2], out=res3);
+	And(a=outZr, b=instruction[1], out=res2);
+	And(a=gtRes, b=instruction[0], out=res1);
+	
+	Or(a=res1 ,b=res2 ,out=or1);
+	Or(a=or1 ,b=res3 ,out=conditionBit);
+	
+	Or(a=instruction[15], b=false, out=Ccommand);
+    And(a=Ccommand, b=conditionBit, out=pcLoad);
+	
+	PC(in=outA ,load=pcLoad ,inc=true ,reset=reset ,out[0..14]=pc2);
+	And(a=instruction[3], b=instruction[15], out=writeM2);
+	
+	// Check whether to use the regular or the extended ALU:
+	CPU(inM=inM, instruction=instruction, reset=reset, outM=outM1, writeM=writeM1, addressM=addressM1, pc=pc1);
+
+	And(a=instruction[13], b=instruction[13], out=out1314);
+	Not(in=instruction[15], out=nmsb);
+	Or(a=out1314, b=nmsb, out=regularCPU);
+	
+	Mux16(a=outM2, b=outM1, sel=regularCPU, out=outM);
+	Mux(a=writeM2, b=writeM1, sel=regularCPU, out=writeM);
+	Mux16(a[0]=false, a[1..15]=addressM2, b[0]=false, b[1..15]=addressM1, sel=regularCPU, out[1..15]=addressM);
+	Mux16(a[0]=false, a[1..15]=pc2, b[0]=false, b[1..15]=pc1, sel=regularCPU, out[1..15]=pc);
+}

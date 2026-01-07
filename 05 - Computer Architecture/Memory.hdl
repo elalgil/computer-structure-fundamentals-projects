@@ -1,0 +1,54 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/Memory.hdl
+
+/**
+ * The complete address space of the Hack computer's memory,
+ * including RAM and memory-mapped I/O. 
+ * The chip facilitates read and write operations, as follows:
+ *     Read:  out(t) = Memory[address(t)](t)
+ *     Write: if load(t-1) then Memory[address(t-1)](t) = in(t-1)
+ * In words: the chip always outputs the value stored at the memory 
+ * location specified by address. If load==1, the in value is loaded 
+ * into the memory location specified by address. This value becomes 
+ * available through the out output from the next time step onward.
+ * Address space rules:
+ * Only the upper 16K+8K+1 words of the Memory chip are used. 
+ * Access to address>0x6000 is invalid. Access to any address in 
+ * the range 0x4000-0x5FFF results in accessing the screen memory 
+ * map. Access to address 0x6000 results in accessing the keyboard 
+ * memory map. The behavior in these addresses is described in the 
+ * Screen and Keyboard chip specifications given in the book.
+ */
+
+CHIP Memory {
+    IN in[16], load, address[15];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+	
+	Not(in=address[14], out=openRAM); //if address is for RAM then the 14th bit is 0
+	
+    Not(in=address[13], out=nA13); //if address is for screen the 13th bit is 0 and the 14th is 1
+    And(a=address[14], b=nA13, out=openScreen);
+	
+	Or8Way(in=address[0..7], out=or7);
+	Or8Way(in=address[4..11], out=or11);
+	Or(a=or7, b=or11, out=nKBD);
+	Not(in=nKBD, out=noBits);
+	And(a=address[14], b=address[13], out=a14a13);
+    And(a=a14a13, b=noBits, out=openKBD); //if the address is for KBD the the 13th and 14th bit are 1 and all the other are 0
+	
+	And(a=load, b=openRAM, out=loadRAM);
+    And(a=load, b=openScreen, out=loadScreen);
+	
+	RAM16K(in=in ,load=loadRAM ,address=address[0..13] ,out=outRam);
+	Screen(in=in ,load=loadScreen ,address=address[0..12] ,out=outScreen);
+	Keyboard(out=outKBD);
+	
+	Mux16(a=outRam, b=outScreen, sel=openScreen, out=final1); //choose between the outputs of screen or RAM
+    Mux16(a=final1, b=outKBD, sel=openKBD, out=out); //choose between the prier chosen and KBD
+	
+}
