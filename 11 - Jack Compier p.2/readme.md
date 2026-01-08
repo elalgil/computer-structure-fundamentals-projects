@@ -40,3 +40,14 @@ function int solve(int a, int b) {
     let sum = a + b;
     return sum;
 }
+```
+ת
+```VM Language
+function Main.solve 1   // 1 local variable (sum)
+push argument 0         // push a
+push argument 1         // push b
+add                     // compute a + b
+pop local 0             // sum = result
+push local 0            // push sum
+return                  // return value
+```
