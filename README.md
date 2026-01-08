@@ -93,6 +93,7 @@ computer-structure-fundamentals-projects/
 └── III. High-Level Applications (Jack Language)
     ├── 09-The-Maze-Game/          # A complex game featuring AI (BFS) and custom graphics
     └── 12-Operating-System/       # The Standard Library (Math, Screen, String, Memory, etc.)
+```
 
 ## Aוuther
 Developed by Elal Gilboa as part of the Nand2Tetris certification.
