@@ -53,6 +53,19 @@ The entry point and supervisor of the OS.
 * **`wait(duration)`**: Pauses execution for a set amount of time (approximate milliseconds).
 * **`error(errorCode)`**: Reports runtime errors (like array index out of bounds) by printing a code and halting.
 
+## ⚡ Algorithmic Efficiency
+
+Since the Hack hardware platform is extremely primitive (lacking native multiplication, division, or floating-point units), the Operating System must implement these operations in software. To ensure reasonable performance, I implemented standard efficient algorithms rather than naive approaches.
+
+### Mathematical Optimizations (`Math.jack`)
+* **Multiplication (Shift-and-Add):** Instead of naive repeated addition (which is $O(n)$), I implemented the **Shift-and-Add algorithm**. This allows multiplying two 16-bit numbers in exactly 16 iterations ($O(\log n)$ complexity), manipulating bits directly.
+* **Division (Recursive Long Division):** I implemented a recursive long division algorithm ($O(\log n)$) that builds the quotient bit by bit, avoiding the slow process of repeated subtraction.
+* **Square Root (Binary Search):** Finding the integer square root is done using a binary search-like approach on the bits. The algorithm determines the root in exactly $n/2$ (8) iterations for 16-bit numbers, checking `(y + 2^j)^2 <= x` at each step.
+
+### Graphics Optimizations (`Screen.jack`)
+* **Line Drawing (Bresenham’s Algorithm):** Drawing a line requires determining which pixels to approximate on a grid. I implemented **Bresenham's Line Algorithm**, which relies solely on integer addition and subtraction (avoiding expensive division or floating-point calculations) to determine the "error" term and choose the next pixel.
+* **Circle Drawing:** To draw filled circles efficiently, the algorithm uses the Pythagorean theorem ($dy^2 + dx^2 = r^2$) to calculate the horizontal width of the circle at each row, drawing it as a series of horizontal lines (using `drawLine`) rather than calculating every pixel individually.
+
 ## Test Suite & Verification
 The implementation was rigorously tested using the official Nand2Tetris test suite. Each module is tested in isolation:
 
