@@ -1,0 +1,131 @@
+// This file is part of nand2tetris, as taught in The Hebrew University, and
+// was written by Aviv Yaish. It is an extension to the specifications given
+// [here](https://www.nand2tetris.org) (Shimon Schocken and Noam Nisan, 2017),
+// as allowed by the Creative Common Attribution-NonCommercial-ShareAlike 3.0
+// Unported [License](https://creativecommons.org/licenses/by-nc-sa/3.0/).
+
+/**
+ * A library that supports various program execution services.
+ */
+class Sys {
+    /** Performs all the initializations required by the OS. */
+    function void init() {
+        // Pseudocode:
+        // 1. for each relevant OS class, do Class.init
+        //    Some OS classes depend on others, so order is important here!
+        // 2. do Main.main()
+        // 3. do Sys.halt()
+        
+        do Memory.init();
+        do Math.init();
+        do Output.init();
+        do Screen.init();
+        do Keyboard.init();
+        
+        
+        do Main.main(); // start the user program
+        //do Screen.dispose();
+        //do Math.dispose();
+        //do Output.dispose();
+        do Sys.halt(); // stop the program
+        return;
+    }
+
+    /** Halts program execution. */
+    function void halt() {
+        while (true) {
+            // do nothing
+        }
+        return;
+    }
+
+    /** Waits approximately duration milliseconds and returns.  */
+    function void wait(int duration) {
+        var int dur, res, counter;
+        let dur = duration;
+        if (~(dur > 0)) {
+            do Sys.error(1); // duration must be positive
+        }
+        while (dur > 1) {
+            let dur = dur - 1;
+            let counter = 0;
+            while (counter < 70) {
+                let counter = counter + 4;
+                //let k = Math.multiply(1700, 1700); // to waste time
+            }
+        }
+        return;
+    }
+
+    /** Displays the given error code in the form "ERR<errorCode>",
+     *  and halts the program's execution. */
+    function void error(int errorCode) {
+        
+        //do Screen.clearScreen();
+        do Output.printString("ERR");
+        do Output.printInt(errorCode);
+        do Sys.halt();
+        return;
+
+        /**if (errorCode = 1) {
+            let errString = errString.appendChar("1");
+            do Output.printString("Duration must be positive\n");
+        } else if (errorCode = 2) {
+            let errString = errString.appendChar("2");
+            do Output.printString("Array size must be positive\n");
+        } else if (errorCode = 3) {
+            let errString = errString.appendChar("3");
+            do Output.printString("Division by zero\n");
+        } else if (errorCode = 4) {
+            let errString = errString.appendChar("4");
+            do Output.printString("Cannot compute square root of a negative number\n");
+        } else if (errorCode = 5) {
+            let errString = errString.appendChar("5");
+            do Output.printString("Allocated memory size must be positive\n");
+        } else if (errorCode = 6) {
+            let errString = errString.appendChar("6");
+            do Output.printString("Heap overflow\n");
+        } else if (errorCode = 7) {
+            let errString = errString.appendChar("7");
+            do Output.printString("Illegal pixel coordinates\n");
+        } else if (errorCode = 8) {
+            let errString = errString.appendChar("8");
+            do Output.printString("Illegal line coordinates\n");
+        } else if (errorCode = 9) {
+            let errString = errString.appendChar("9");
+            do Output.printString("Illegal rectangle coordinates\n");
+        } else if (errorCode = 12) {
+            let errString = errString.appendChar("12");
+            do Output.printString("Illegal center coordinates\n");
+        } else if (errorCode = 13) {
+            let errString = errString.appendChar("13");
+            do Output.printString("Illegal radius\n");
+        } else if (errorCode = 14) {
+            let errString = errString.appendChar("14");
+            do Output.printString("Maximum length must be non-negative\n");
+        } else if (errorCode = 15) {
+            let errString = errString.appendChar("15");
+            do Output.printString("String index out of bounds\n"); // charAt
+        } else if (errorCode = 16) {
+            let errString = errString.appendChar("16");
+            do Output.printString("String index out of bounds\n"); // setCharAt
+        } else if (errorCode = 17) {
+            let errString = errString.appendChar("17");
+            do Output.printString("String is full\n");
+        } else if (errorCode = 18) {
+            let errString = errString.appendChar("18");
+            do Output.printString("String is empty\n");
+        } else if (errorCode = 19) {
+            let errString = errString.appendChar("19");
+            do Output.printString("Insufficient string capacity\n");
+        } else if (errorCode = 20) {
+            let errString = errString.appendChar("20");
+            do Output.printString("Illegal cursor location\n");
+        }
+        else {
+            let errString = errString.appendChar("0");
+        } */
+
+        // errString = "ERR<errorCode>"
+    }
+}
