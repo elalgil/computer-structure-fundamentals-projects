@@ -97,5 +97,3 @@ computer-structure-fundamentals-projects/
 
 ## Aוuther
 Developed by Elal Gilboa as part of the Nand2Tetris certification.
-│   ├── 01-Boolean-Logic/          # Logic Gates (Not, And, Or, Xor, Mux)
-│   ├── 02-
