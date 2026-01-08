@@ -1,0 +1,503 @@
+class MazeGame
+{
+    field Player player;
+    field Array enemies; // array of Player objects representing enemies
+    field Array board; // 1D array representing the maze 
+    field MazeRenderer renderer;
+    field InputHandler inputHandler;
+    field int colSize, rowSize; // dimensions of the maze in blocks
+    field int gameState; // 0 = ongoing, 1 = win, -1 = lose
+    field int numEnemies;
+    field int seed;
+    field Patterns patterns;
+
+    
+
+    constructor MazeGame new()
+    {
+        var Player curEnemy;
+        var Random rnd;
+        var int patIdx;
+        let colSize = 32; // Default size 32*16=512
+        let rowSize = 16; // Default size 16*16=256
+        let numEnemies = 1; // Default number of enemies
+        let gameState = 0; // Game ongoing
+        let inputHandler = InputHandler.new();
+        let seed = inputHandler.getSeed();
+        let board = Array.new(colSize * rowSize);
+        do Screen.clearScreen();
+
+        let patterns = Patterns.new();
+        let rnd = Random.new(seed);
+        let patIdx = rnd.random(2);
+        do initBoard(patIdx, colSize, rowSize);
+
+        let player = Player.new(16, 16, false);
+        let enemies = Array.new(numEnemies);
+        let enemies[0] = Player.new(96, 112, true);
+
+        // Initialize the maze board here (e.g., generateMaze method)
+        // Initialize player and enemies here (e.g., place them on the board)
+        let renderer = MazeRenderer.new(colSize, rowSize);
+        do renderer.renderMaze(board);
+        do renderer.renderPlayer(player.getX(), player.getY()); // initial player position
+        let curEnemy = enemies[0];
+        do renderer.renderEnemies(curEnemy.getX(), curEnemy.getY()); // initial enemy position
+        return this;
+    }
+    
+    
+    /**
+    This func receive a seed, choose board according to seed and insert
+    into Array 'w' for wall and 'e' for empty cell. The board is 16X32 cells
+    representing the entire screen in pixels. each cell is 16X16 pixels */
+    method void initBoard(int seed, int colSize, int rowSize)
+    {
+        var int col, row, idx;
+        var Array pat;
+
+        let pat = patterns.getPattern(seed);
+        let row = 0;
+        while(row< rowSize)
+        {
+            let col = 0;
+            while(col < colSize)
+            {
+                let idx = (row * colSize) + col;
+                let board[idx] = pat[idx];
+                let col = col + 1;
+            }
+            let row = row + 1;
+        }
+        return;
+    }
+
+    /** this func runs the game loop, and advance the player and the enemy
+    in each cycle turn. The game ends when the player reached the end or
+    the enemy caught the player. */
+    method int runGame()
+    {
+        var int code;
+        while (gameState = 0)
+        {
+            do cyclePlayers();
+            do checkGameOver();
+        }
+        if (gameState = 1)
+        {
+            // Player wins
+            // Display win message or perform win actions
+            //let code = inputHandler.shouldRestart();
+            do Screen.clearScreen();
+            let code = inputHandler.shouldRestart();
+        }
+        if (gameState = -1)
+        {
+            // Player loses
+            // Display lose message or perform lose actions
+            do Screen.clearScreen();
+            let code = inputHandler.shouldRestart();
+        }
+        return code;
+    }
+
+    /** return true if the cell (col,row) is an object or out-of-bounds
+    f - for finish, w - for wall
+    col and row here are cell indices (not pixels) */
+    method boolean isObjectByCell(int col, int row, int charToCheck) {
+        var int idx;
+        var int val;
+
+        if (col < 0) { // out of bounds
+            return true;
+        }
+        if (~(col < colSize)) { // equivalent to col >= colSize
+            return true;
+        }
+        if (row < 0) { // out of bounds
+            return true;
+        }
+        if (~(row < rowSize)) { // equivalent to row >= rowSize
+            return true;
+        }
+
+        let idx = row * colSize + col;
+        let val = board[idx];
+
+        if (val = charToCheck) { // 119 == 'w', 102 == 'f'
+            return true;
+        }
+        return false;
+    }
+
+
+
+    /** Check bounding box around the player for any wall or end overlap.
+    All coords in pixels. Returns true if overlap a wall. */
+    method boolean playerOverlapObject(int x, int y, int width, int height, boolean isWall) {
+        var int minCol, maxCol, minRow, maxRow;
+        var int tmp1, tmp2;
+        var int r, c;
+    
+        let minCol = Math.divide(x, 16);
+        let tmp1   = (x + width) - 1;
+        let maxCol = Math.divide(tmp1, 16);
+
+        let minRow = Math.divide(y, 16);
+        let tmp2   = (y + height) - 1; // bottommost pixel included
+        let maxRow = Math.divide(tmp2, 16);
+
+        let r = minRow;
+        while (~(maxRow < r)) {         // while (r <= maxRow)
+            let c = minCol;
+            while (~(maxCol < c)) {     // while (c <= maxCol)
+                if (isWall & isObjectByCell(c, r, 119)) { // 119 == 'w'
+                    return true;
+                }
+                if (~isWall) {
+                    if (isObjectByCell(c,r,102)) { // 102 == 'f'
+                        return true;
+                    }
+                }
+                let c = c + 1;
+            }
+            let r = r + 1;
+        }
+        return false;
+    }
+
+    /** Convert move direction requested by player to pixel coordinates. */
+    method Array convertDir2Coords(int direction)
+    {
+        var Array coords;
+        let coords = Array.new(2);
+        if (direction = 1) // up
+        {   
+            let coords[0] = player.getX();
+            let coords[1] = player.getY() - 2;
+            return coords;
+        }
+        if (direction = 2) // right
+        {
+            let coords[0] = player.getX() + 2;
+            let coords[1] = player.getY();
+            return coords;
+        }
+        if (direction = 3) // down
+        {
+            let coords[0] = player.getX();
+            let coords[1] = player.getY() + 2;
+            return coords;
+        }
+        else  // left = 4
+        {
+            let coords[0] = player.getX() - 2;
+            let coords[1] = player.getY();
+            return coords;
+        }
+    }
+    /** Func check if moving player by dx,dy pixels is valid (no overlap with walls).
+    Assumes player.*/
+    method boolean isValidMoveByPixels(int direction) 
+    {   
+        var int dx, dy;
+        var int pw, ph;
+        var Array coords;
+        if (direction = 0)
+        {
+            return false;
+        }
+        else {
+        let coords = convertDir2Coords(direction);
+        let dx = coords[0];
+        let dy = coords[1];
+        let pw = player.getWidth();
+        let ph = player.getHeight();
+
+        if (playerOverlapObject(dx, dy, pw, ph, true)) 
+        {
+            do coords.dispose();
+            return false;
+        }
+        do coords.dispose();
+        return true;
+        }
+    }
+
+    /** Func receive a direction and move the player accordinglly. Func 
+    must be called after validation*/
+    method void movePlayer(int direction)
+    {
+        if (direction = 1) // up
+        {
+            do player.moveUp();
+        }
+        if (direction = 2) // right
+        {
+            do player.moveRight();
+        }
+        if (direction = 3) // down
+        {
+            do player.moveDown();
+        }
+        if (direction = 4) // left
+        {
+            do player.moveLeft();
+        }
+        return;
+    } 
+
+    method void cyclePlayers()
+    {
+        // move player by keyboard, then move enemy by BFS
+        var int direction;
+        var int flag;
+        let flag = 1;
+        let direction = 0;
+        while ((flag = 1) & (direction = 0 | isValidMoveByPixels(direction)))
+        {
+            if (~(direction = 0)){
+                do renderer.renderWhiteBlock(player.getX(), player.getY());
+                do movePlayer(direction);
+                do renderer.renderPlayer(player.getX(), player.getY());
+                let flag = 0;
+                do moveEnemy(0);
+            }
+            if (flag = 1){
+                let direction = inputHandler.getDirection();
+            }
+            
+            // wait for system
+            do Sys.wait(10);
+        }
+        // by now a direction has been chosen
+        return;
+    }
+
+    /** Move enemy enemyNum (from enemy list) one cycle toward player using bfsNextCell. */
+    method void moveEnemy(int enemyNum)
+    {
+        var int eX,eY, pX, pY, eCol, eRow, pCol, pRow;
+        var int nextIdx, nextCol, nextRow, targetX, targetY;
+        var int step;
+        var int oldX, oldY;
+        var Player curEnemy;
+
+        let curEnemy = enemies[enemyNum];
+        let oldX = curEnemy.getX();
+        let oldY = curEnemy.getY();
+        let eX = oldX;
+        let eY = oldY;
+        let pX = player.getX();
+        let pY = player.getY();
+
+        // convert coords in pixels to cells on board
+        let eCol = Math.divide(eX, 16);
+        let eRow = Math.divide(eY, 16);
+        let pCol = Math.divide(pX, 16);
+        let pRow = Math.divide(pY, 16);
+
+        // find next cell in enemy's route towards the player
+        let nextIdx = bfsNextCell(eCol, eRow, pCol, pRow);
+        if (nextIdx = -1) // no possible path
+        {
+            return;
+        }
+
+        // decode nextIdx -> (nextRow, nextCol)
+        let nextRow = Math.divide(nextIdx, colSize);
+        let nextCol = nextIdx - (nextRow * colSize);
+
+        // pixel target top-left for that cell
+        let targetX = nextCol * 16;
+        let targetY = nextRow * 16;
+        let step = 2; // pixels per cycle
+        if (eX < targetX) 
+        {
+            let eX = eX + step;
+            if (~(eX < targetX))
+            {
+             let eX = targetX;
+            }
+        }
+        if (eX > targetX) 
+        {
+            let eX = eX - step;
+            if (~(targetX < eX)){
+             let eX = targetX;
+             }
+        }
+        if (eY < targetY) 
+        {
+            let eY = eY + step;
+            if (~(eY < targetY))
+            {
+             let eY = targetY;
+            }
+        }
+        if (eY > targetY) 
+        {
+            let eY = eY - step;
+            if (~(targetY < eY)){
+             let eY = targetY;
+            }
+        }
+        do curEnemy.setX(eX);
+        do curEnemy.setY(eY);
+        do renderer.renderWhiteBlock(oldX, oldY);
+        do renderer.renderEnemies(eX, eY);
+        return;
+    }
+
+    /** return true if the cell (col,row) is a enemy or out-of-bounds
+    col and row here are cell indices (not pixels) */
+    method boolean playerOverlapEnemy(int px, int py) {
+        var int diff_x, diff_y;
+        var Player curEnemy;
+        let curEnemy = enemies[0];
+
+        let diff_x = px - curEnemy.getX();
+        let diff_y = py - curEnemy.getY();
+        let diff_x = Math.abs(diff_x);
+        let diff_y = Math.abs(diff_y);
+        if ((diff_x < player.getWidth()) & (diff_y < player.getHeight())) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Check for game over conditions */
+    method void checkGameOver()
+    {
+        if (playerOverlapEnemy(player.getX(), player.getY()))
+        {
+            let gameState = -1; // lose
+            return;
+        }
+        if (playerOverlapObject(player.getX(), player.getY(), player.getWidth(), player.getHeight(), false))
+        {
+            let gameState = 1; // win
+            return;
+        }
+        return;
+    }
+
+    /** Dispose the MazeGame object */
+    method void dispose()
+    {
+        var Player curEnemy;
+        let curEnemy = enemies[0];
+        do inputHandler.dispose();
+        do renderer.dispose();  
+        do player.dispose();
+        do curEnemy.dispose();
+        do enemies.dispose();
+        do board.dispose();
+        do patterns.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Returns idx of next cell on shortest path from (sCol,sRow) to (gCol,gRow).
+    idx = row*colSize + col. Returns -1 if no path. Uses Queue class.
+    args:
+    - sCol, sRow: starting cell coordinates
+    - gCol, gRow: goal cell coordinates
+    */
+    method int bfsNextCell(int sCol, int sRow, int gCol, int gRow)
+    {
+        var int total,startIdx,goalIdx;
+        var Queue q;
+        var Array parent;
+        var int i, curIdx ,row, col, nRow, nCol, neighborIdx;
+        var int nextMove;
+        var boolean flag;
+
+        let total = colSize * rowSize;
+        let startIdx = (sRow * colSize) + sCol;
+        let goalIdx  = (gRow * colSize) + gCol;
+        let parent = Array.new(total);
+        let q = Queue.new();
+
+        // init parent to -1 (unvisited)
+        let i = 0;
+        while (i < total) {
+            let parent[i] = -1;
+            let i = i + 1;
+        }
+        do q.push(startIdx);
+        let parent[startIdx] = startIdx; // mark visited; parent of root = self
+        let flag = true;
+        while (flag)
+        {
+            let curIdx = q.pop();
+            if (curIdx = -1) { // queue is empty
+                let flag = false;
+            }
+            // if reached goal then loop stops
+            if (curIdx = goalIdx) {
+                let flag = false;
+            }
+
+            // convert curIdx  into (row, col)
+            let row = Math.divide(curIdx, colSize);
+            let col = curIdx - (row * colSize);
+
+            // up neighbor (row-1, col)
+            let nRow = row - 1;
+            let nCol = col;
+            if (~(isObjectByCell(nCol, nRow, 119))) {
+                let neighborIdx = (nRow * colSize) + nCol;
+                if (parent[neighborIdx] = -1) {
+                    let parent[neighborIdx] = curIdx;
+                    do q.push(neighborIdx);
+                }
+            }
+            // right neighbor (row, col+1)
+            let nRow = row;
+            let nCol = col + 1;
+            if (~(isObjectByCell(nCol, nRow, 119))) {
+                let neighborIdx = (nRow * colSize) + nCol;
+                if (parent[neighborIdx] = -1) {
+                    let parent[neighborIdx] = curIdx;
+                    do q.push(neighborIdx);
+                }
+            }
+            // down neighbor (row+1, col)
+            let nRow = row + 1;
+            let nCol = col;
+            if (~(isObjectByCell(nCol, nRow, 119))) {
+                let neighborIdx = (nRow * colSize) + nCol;
+                if (parent[neighborIdx] = -1) {
+                    let parent[neighborIdx] = curIdx;
+                    do q.push(neighborIdx);
+                }
+            }
+            // left neighbor (row, col-1)
+            let nRow = row;
+            let nCol = col - 1;
+            if (~(isObjectByCell(nCol, nRow, 119))) {
+                let neighborIdx = (nRow * colSize) + nCol;
+                if (parent[neighborIdx] = -1) {
+                    let parent[neighborIdx] = curIdx;
+                    do q.push(neighborIdx);
+                }
+            }
+        }
+        // if goal not visited then there's no valid path
+        if (parent[goalIdx] = -1) {
+            do q.dispose();
+            do parent.dispose();
+            return -1;
+        }
+        // backtrack from goal to find the first cell after start
+        let nextMove = goalIdx;
+        while (~(parent[nextMove] = startIdx)) {
+            let nextMove = parent[nextMove];
+        }
+        do q.dispose();
+        do parent.dispose();
+        // nextMove is the first step or startIdx if start equals goal
+        return nextMove;
+    }
+}

@@ -1,0 +1,102 @@
+class InputHandler 
+{
+  field int x;
+  /** Arrow key codes per the Hack VM spec */
+  constructor InputHandler new() 
+  {
+    let x = 0;
+    return this;
+  }
+
+  /**
+   * Returns the movement direction based on arrow keys:
+   * 0 = no movement
+   * 1 = up, 2 = right, 3 = down, 4 = left
+   */
+  method int getDirection() {
+    // Poll each arrow key; keyPressed returns true if that key is down
+    // up = 1, right = 2, down = 3, left = 4
+    // initialize the constants
+    var int left, right, up, down, key;
+    let left = 130;
+    let up = 131;
+    let right = 132;
+    let down = 133;
+    let key = Keyboard.keyPressed(); 
+    if (key = up)
+    {
+      return 1;
+    }
+    if (key = right)
+    {
+      return 2;
+    }
+    if (key = down)
+    {
+      return 3;
+    }
+    if (key = left)
+    {
+      return 4;
+    }
+    return 0;
+  }
+
+  /**
+   * Prompts user to press any digit key (0-9),
+   * then returns its numeric value 0..9.
+   */
+  method int getSeed() {
+    var int code, seed;
+
+    do Output.printString("Enter seed (0-9): ");
+    do Output.println();
+
+    // Wait for any digit key
+    while (true) {
+      // Check each digit code
+      let code = Keyboard.readChar(); // if not available, scan them manually with keyPressed
+      if ((code > 47) & (code < 58)) 
+      {
+        // ASCII '0'..'9'
+        let seed = code - 48;
+        do Output.printString("Seed = ");
+        do Output.printInt(seed);
+        do Output.println();
+        return seed;
+      }
+      // slight pause to avoid busy loop burn
+      do Sys.wait(50);
+    }
+    return -1; // error
+  }
+
+  method int shouldRestart() {
+    var int code;
+    do Output.printString("Press r to restart, q to exit: ");
+    do Output.println();
+    while (true) {
+      let code = Keyboard.keyPressed();
+      if (~(code = -1)) {
+        if ((code = 114) | (code = 82)) { // ASCII 'r' or 'R'
+          return 1; // restart
+        }
+        if ((code = 113) | (code = 81)) // ASCII 'q' or 'Q'
+        { 
+            do Screen.clearScreen();
+            return 0; // exit
+        }
+      }
+      // slight pause to avoid busy loop burn
+      do Sys.wait(50);
+    }
+    return 0; // default to exit
+  }
+
+  /** Dispose the inputHandler object */
+    method void dispose()
+    {
+        do Memory.deAlloc(this);
+        return;
+    }
+}

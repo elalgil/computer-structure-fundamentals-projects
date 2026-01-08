@@ -1,0 +1,88 @@
+class Player
+{
+    field int x, y, size; // x, y coordinates in pixels
+    field boolean isEnemy;
+
+    constructor Player new(int x_, int y_, boolean isEnemy_)
+    {
+        let x = x_;
+        let y = y_;
+        let size = 16; // Default size
+        let isEnemy = isEnemy_;
+        return this;
+    }
+
+    /** Get the X coordinate of the player in pixels */
+    method int getX() 
+    {
+        return x;
+    }
+
+    /** Get the Y coordinate of the player in pixels */
+    method int getY() 
+    {
+        return y;
+    }
+
+    /** Set the X coordinate of the player in pixels */
+    method void setX(int newX) 
+    {
+        let x = newX;
+        return ;
+    }
+
+    /** Set the Y coordinate of the player in pixels */
+    method void setY(int newY) 
+    {
+        let y = newY;
+        return ;
+    }
+
+    /** Get the height of the player */
+    method int getHeight() 
+    {
+        return size;
+    }
+
+    /** Get the width of the player */
+    method int getWidth() 
+    {
+        return size;
+    }
+
+    /** Move the player up in 2 pixels */
+    method void moveUp() 
+    {
+        let y = y - 2;
+        return;
+    }
+
+    /** Move the player down in 2 pixels */
+    method void moveDown() 
+    {
+        let y = y + 2;
+        return;
+    }
+
+    /** Move the player left in 2 pixels */
+    method void moveLeft() 
+    {
+        let x = x - 2;
+        return;
+    }
+
+    /** Move the player right in 2 pixels */
+    method void moveRight() 
+    {
+        let x = x + 2;
+        return;
+    }
+
+    /** Dispose the player object */
+    method void dispose()
+    {
+        do Memory.deAlloc(this);
+        return;
+    }
+}
+    

@@ -1,0 +1,33 @@
+class Random {
+
+  /** rolling seed */
+  field int seed;
+
+  /** Initialize the seed to some nonzero value*/
+  constructor Random new(int seed) {
+    let seed = seed;
+    return this;
+  }
+
+  /**
+   * Returns a pseudo-random int in [0..max-1].
+   * Updates seed by +1 each call.
+   */
+  method int random(int max) {
+    var int result;
+    let seed   = seed + 1;
+    let result = seed;
+
+    // reduce result modulo max via subtraction loop
+    while (~(result < max)) 
+    {
+      let result = result - max;
+    }
+    return result;
+  }
+
+  method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+  }
+}

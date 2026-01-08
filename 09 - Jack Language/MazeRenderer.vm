@@ -1,0 +1,811 @@
+function MazeRenderer.new 0
+push constant 2
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 1
+push argument 1
+pop this 0
+push pointer 0
+return
+function MazeRenderer.calcMemAddress 5
+push argument 0
+pop pointer 0
+push constant 512
+pop local 0
+push constant 256
+pop local 1
+push argument 1
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 1
+neg
+return
+label IF_FALSE0
+push argument 1
+push local 0
+push constant 16
+sub
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 1
+neg
+return
+label IF_FALSE1
+push argument 2
+push constant 0
+lt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 1
+neg
+return
+label IF_FALSE2
+push argument 2
+push local 1
+push constant 16
+sub
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 1
+neg
+return
+label IF_FALSE3
+push argument 1
+pop local 2
+push argument 2
+pop local 3
+push local 3
+push constant 32
+call Math.multiply 2
+push local 2
+push constant 16
+call Math.divide 2
+add
+pop local 4
+push constant 16384
+push local 4
+add
+return
+function MazeRenderer.renderMaze 7
+push argument 0
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push this 0
+lt
+not
+if-goto WHILE_END0
+push constant 0
+pop local 1
+label WHILE_EXP1
+push local 1
+push this 1
+lt
+not
+if-goto WHILE_END1
+push local 0
+push this 1
+call Math.multiply 2
+push local 1
+add
+pop local 2
+push local 2
+push argument 1
+add
+pop pointer 1
+push that 0
+pop local 3
+push local 3
+push constant 119
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 1
+push constant 16
+call Math.multiply 2
+pop local 4
+push local 0
+push constant 16
+call Math.multiply 2
+pop local 5
+push pointer 0
+push local 4
+push local 5
+call MazeRenderer.calcMemAddress 3
+pop local 6
+push local 6
+push constant 1
+neg
+eq
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+push local 6
+call MazeRenderer.drawBrickWall 2
+pop temp 0
+label IF_FALSE1
+label IF_FALSE0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+push pointer 0
+push constant 480
+push constant 240
+call MazeRenderer.calcMemAddress 3
+call MazeRenderer.drawEnd 2
+pop temp 0
+push constant 0
+return
+function MazeRenderer.renderPlayer 1
+push argument 0
+pop pointer 0
+push pointer 0
+push argument 1
+push argument 2
+call MazeRenderer.calcMemAddress 3
+pop local 0
+push local 0
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 2
+call Sys.error 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE0
+push local 0
+push constant 0
+add
+push constant 7224
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 9252
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 10212
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 7192
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 1360
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 1040
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 1360
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 1488
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 544
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 2032
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 8188
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 6604
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 7148
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 864
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 3960
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 3960
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function MazeRenderer.renderEnemies 1
+push argument 0
+pop pointer 0
+push pointer 0
+push argument 1
+push argument 2
+call MazeRenderer.calcMemAddress 3
+pop local 0
+push local 0
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 2
+call Sys.error 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE0
+push local 0
+push constant 0
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 4092
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 6150
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 6678
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 2340
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 2244
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 4092
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 288
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 480
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 7710
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 7374
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 5322
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 1032
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 1976
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 320
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 1904
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function MazeRenderer.drawBrickWall 0
+push argument 0
+pop pointer 0
+push argument 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 2
+call Sys.error 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE0
+push argument 1
+push constant 0
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 32
+add
+push constant 30687
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 64
+add
+push constant 30687
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 96
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 128
+add
+push constant 24315
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 160
+add
+push constant 24315
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 192
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 224
+add
+push constant 30687
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 256
+add
+push constant 30687
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 288
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 320
+add
+push constant 24315
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 352
+add
+push constant 24315
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 384
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 416
+add
+push constant 30687
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 448
+add
+push constant 30687
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 480
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function MazeRenderer.renderWhiteBlock 1
+push argument 0
+pop pointer 0
+push pointer 0
+push argument 1
+push argument 2
+call MazeRenderer.calcMemAddress 3
+pop local 0
+push local 0
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 2
+call Sys.error 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE0
+push local 0
+push constant 0
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function MazeRenderer.drawEnd 0
+push argument 0
+pop pointer 0
+push argument 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 2
+call Sys.error 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE0
+push argument 1
+push constant 0
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 32
+add
+push constant 30751
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 64
+add
+push constant 28687
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 96
+add
+push constant 25543
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 128
+add
+push constant 18403
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 160
+add
+push constant 20467
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 192
+add
+push constant 20467
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 224
+add
+push constant 18931
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 256
+add
+push constant 18931
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 288
+add
+push constant 18931
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 320
+add
+push constant 20467
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 352
+add
+push constant 20467
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 384
+add
+push constant 20467
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 416
+add
+push constant 16387
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 448
+add
+push constant 16387
+neg
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 480
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function MazeRenderer.updateRender 0
+push argument 0
+pop pointer 0
+push argument 3
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+push argument 1
+push argument 2
+call MazeRenderer.renderEnemies 3
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push pointer 0
+push argument 1
+push argument 2
+call MazeRenderer.renderPlayer 3
+pop temp 0
+label IF_END0
+push constant 0
+return
+function MazeRenderer.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return

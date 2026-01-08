@@ -1,0 +1,236 @@
+class  MazeRenderer
+{
+    field int rowSize, colSize; // cell indexes not pixels
+
+    /** constructor receives sizes of the Screen in this machine.
+    colSize and rowSize are NOT in pixels, they are in cells */
+    constructor MazeRenderer new(int ColSize, int RowSize)
+    {
+        let colSize = ColSize;
+        let rowSize = RowSize;
+        return this;
+    }
+    
+    /** return absolute RAM address (word address) for top-left pixel (x,y).
+        Func return -1 if x,y are outside of the board. X,Y are pixels */
+    method int calcMemAddress(int x, int y)
+    {
+        var int sx, sy, px, py;
+        var int wordOffset;
+        let sx = 512;    // screen width (pixels)
+        let sy = 256;    // screen height (pixels)
+
+        // check bounds: valid top-left x is 0,..,(sx - 16), y is 0, ..., (sy - 16)
+        if (x < 0) {
+            return -1;
+        }
+        if (x > (sx - 16)) {
+            return -1;
+        }
+        if (y < 0) {
+            return -1;
+        }
+        if (y > (sy - 16)) {
+            return -1;
+        }
+        let px = x;
+        let py = y;
+        // words per scanline = 256 pixels / 16 bits = 16 words
+        let wordOffset = (py * 32) + Math.divide(px, 16);
+        return (16384 + wordOffset);
+    }
+
+    /** This function renders the maze and its elements based on the board received in constructor*/
+    method void renderMaze(Array board)
+    {
+        var int rows, cols, idx, cell, x, y, mem;
+        // clear screen first
+        do Screen.clearScreen();
+        let rows = 0;
+        while (rows < rowSize) {
+            let cols = 0;
+            while (cols < colSize) {
+                let idx = (rows * colSize) + cols;
+                let cell = board[idx];
+
+                if (cell = 119) // 119 == 'w' (wall)
+                {                   
+                    let x = cols * 16;
+                    let y = rows * 16;
+                    let mem = calcMemAddress(x, y); // returns absolute RAM word address
+                    if (~(mem = -1))
+                    {
+                        do drawBrickWall(mem); // draws the 16X16 wall tile at mem
+                    }
+                }
+                let cols = cols + 1;
+            }
+            let rows = rows + 1;
+        }
+        do drawEnd(calcMemAddress(480, 240)); // draw the end point
+        return;
+    }
+
+    /** This function receive x,y coordinates and calc the absolute RAM address,
+    then render the player's new location */
+    method void renderPlayer(int x_pix, int y_pix)
+    {   var int memAddress;
+        let memAddress = calcMemAddress(x_pix, y_pix);
+        if (memAddress = -1)
+        {
+            do Sys.error(2);
+            return;
+        }
+        do Memory.poke(memAddress + 0, 7224);
+        do Memory.poke(memAddress + 32, 9252);
+        do Memory.poke(memAddress + 64, 10212);
+        do Memory.poke(memAddress + 96, 7192);
+        do Memory.poke(memAddress + 128, 1360);
+        do Memory.poke(memAddress + 160, 1040);
+        do Memory.poke(memAddress + 192, 1360);
+        do Memory.poke(memAddress + 224, 1488);
+        do Memory.poke(memAddress + 256, 544);
+        do Memory.poke(memAddress + 288, 2032);
+        do Memory.poke(memAddress + 320, 8188);
+        do Memory.poke(memAddress + 352, 6604);
+        do Memory.poke(memAddress + 384, 7148);
+        do Memory.poke(memAddress + 416, 864);
+        do Memory.poke(memAddress + 448, 3960);
+        do Memory.poke(memAddress + 480, 3960);
+        return;
+    }
+
+    /** This function receive x,y coordinates and calc the absolute RAM address,
+    then render the enemy's new location */
+    method void renderEnemies(int x_pix, int y_pix)
+    {
+        var int memAddress;
+        let memAddress = calcMemAddress(x_pix, y_pix);
+        if (memAddress = -1)
+        {
+            do Sys.error(2);
+            return;
+        }
+        do Memory.poke(memAddress + 0, 0);
+        do Memory.poke(memAddress + 32, 4092);
+        do Memory.poke(memAddress + 64, 6150);
+        do Memory.poke(memAddress + 96, 6678);
+        do Memory.poke(memAddress + 128, 2340);
+        do Memory.poke(memAddress + 160, 2244);
+        do Memory.poke(memAddress + 192, 4092);
+        do Memory.poke(memAddress + 224, 288);
+        do Memory.poke(memAddress + 256, 480);
+        do Memory.poke(memAddress + 288, 7710);
+        do Memory.poke(memAddress + 320, 7374);
+        do Memory.poke(memAddress + 352, 5322);
+        do Memory.poke(memAddress + 384, 1032);
+        do Memory.poke(memAddress + 416, 1976);
+        do Memory.poke(memAddress + 448, 320);
+        do Memory.poke(memAddress + 480, 1904);
+        return;
+    }
+    /** This function draws a brick wall at the specified location */
+    method void drawBrickWall(int memAddress)
+    {
+    if (memAddress = -1)
+    {
+        do Sys.error(2);
+        return;
+    }
+	do Memory.poke(memAddress + 0, -1);
+	do Memory.poke(memAddress + 32, -30687);
+	do Memory.poke(memAddress + 64, -30687);
+	do Memory.poke(memAddress + 96, -1);
+	do Memory.poke(memAddress + 128, -24315);
+	do Memory.poke(memAddress + 160, -24315);
+	do Memory.poke(memAddress + 192, -1);
+	do Memory.poke(memAddress + 224, -30687);
+	do Memory.poke(memAddress + 256, -30687);
+	do Memory.poke(memAddress + 288, -1);
+	do Memory.poke(memAddress + 320, -24315);
+	do Memory.poke(memAddress + 352, -24315);
+	do Memory.poke(memAddress + 384, -1);
+	do Memory.poke(memAddress + 416, -30687);
+	do Memory.poke(memAddress + 448, -30687);
+	do Memory.poke(memAddress + 480, -1);
+	return;
+    }
+
+    /** This func receive x,y coordinates in pixels, calc the abs mem location
+    then render a white block to erase the player/enemy from previous location */
+    method void renderWhiteBlock(int x_pix, int y_pix) 
+    {
+        var int memAddress;
+        let memAddress = calcMemAddress(x_pix, y_pix);
+        if (memAddress = -1)
+        {
+            do Sys.error(2);
+            return;
+        }
+        do Memory.poke(memAddress + 0, 0);
+        do Memory.poke(memAddress + 32, 0);
+        do Memory.poke(memAddress + 64, 0);
+        do Memory.poke(memAddress + 96, 0);
+        do Memory.poke(memAddress + 128, 0);
+        do Memory.poke(memAddress + 160, 0);
+        do Memory.poke(memAddress + 192, 0);
+        do Memory.poke(memAddress + 224, 0);
+        do Memory.poke(memAddress + 256, 0);
+        do Memory.poke(memAddress + 288, 0);
+        do Memory.poke(memAddress + 320, 0);
+        do Memory.poke(memAddress + 352, 0);
+        do Memory.poke(memAddress + 384, 0);
+        do Memory.poke(memAddress + 416, 0);
+        do Memory.poke(memAddress + 448, 0);
+        do Memory.poke(memAddress + 480, 0);
+        return;
+    }
+
+    /** This function draws the end point of the maze */
+    method void drawEnd(int memAddress) 
+    {
+        if (memAddress = -1)
+        {
+            do Sys.error(2);
+            return;
+        }
+        do Memory.poke(memAddress+0, -1);
+        do Memory.poke(memAddress + 32, -30751);
+        do Memory.poke(memAddress + 64, -28687);
+        do Memory.poke(memAddress + 96, -25543);
+        do Memory.poke(memAddress + 128, -18403);
+        do Memory.poke(memAddress + 160, -20467);
+        do Memory.poke(memAddress + 192, -20467);
+        do Memory.poke(memAddress + 224, -18931);
+        do Memory.poke(memAddress + 256, -18931);
+        do Memory.poke(memAddress + 288, -18931);
+        do Memory.poke(memAddress + 320, -20467);
+        do Memory.poke(memAddress + 352, -20467);
+        do Memory.poke(memAddress + 384, -20467);
+        do Memory.poke(memAddress + 416, -16387);
+        do Memory.poke(memAddress + 448, -16387);
+        do Memory.poke(memAddress + 480, -1);
+        return;
+    }
+
+    /** Func receive an (x,y) coordinates in pixels of the top left corner of the
+    character (player/ enemy) and calc the location of this figure then render
+    it in the new location. erasing the old render happens prier to calling this func*/
+    method void updateRender(int playerX, int playerY, boolean isEnemy)
+    {
+        if (isEnemy) {
+            do renderEnemies(playerX, playerY);
+        }
+        else {
+            do renderPlayer(playerX, playerY);
+        }
+        return;
+    }
+
+    /** Dispose the mazeRenderer object */
+    method void dispose()
+    {
+        do Memory.deAlloc(this);
+        return;
+    }
+}

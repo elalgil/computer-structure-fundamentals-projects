@@ -1,0 +1,39 @@
+// This file is part of nand2tetris, as taught in The Hebrew University, and
+// was written by Aviv Yaish. It is an extension to the specifications given
+// [here](https://www.nand2tetris.org) (Shimon Schocken and Noam Nisan, 2017),
+// as allowed by the Creative Common Attribution-NonCommercial-ShareAlike 3.0
+// Unported [License](https://creativecommons.org/licenses/by-nc-sa/3.0/).
+
+/**
+  * In Jack programs, the first function that runs is always the function "main"
+  * from the class "Main".
+  * You can include as many classes and functions as you want.
+  */
+
+  /** Game instructions:
+  This game is a "maze breaker", the player can move using the arrows
+  up, down, left and right. The goal is to get to the door at the 
+  bottom right side of the screen without getting caught by the enemy.
+  which is chasing the player. After the game is over - with a win or lose
+  the player can choose to play again or quit.
+  In each game the player is requested to choose a number between 1 and 9
+  to represent the maze layout.
+  */
+class Main {
+  function void main() 
+  {
+    var MazeGame game;
+    var int run_again;
+
+    let run_again = 1;
+    while (run_again = 1) {
+        do Screen.clearScreen();
+        do Output.moveCursor(0,0);
+        let game = MazeGame.new();
+        let run_again = game.runGame();
+        do game.dispose();
+    }
+    return;
+  }
+}
+

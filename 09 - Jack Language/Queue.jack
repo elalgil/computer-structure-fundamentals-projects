@@ -1,0 +1,117 @@
+class Queue
+{
+    field Array data; 
+    field int head;
+    field int tail;
+    field int len;
+    field int cap;
+
+    /** constructor: Queue initial size is 4 */
+    constructor Queue new()
+    {
+        let cap  = 4;
+        let data = Array.new(cap);
+        let head = 0;
+        let tail = 0;
+        let len  = 0;
+        return this;
+    }
+
+    /** push value v to queue, resize the queue if needed */
+    method boolean push(int v)
+    {
+        var int next;
+        if (len = cap) {
+            let next = cap * 2; // increase capacity, mult by 2
+            do resize(next);
+        }
+        let data[tail] = v;
+        let next = tail + 1;
+        if (~(next < cap)) {
+            let tail = 0;
+        } else {
+            let tail = next;
+        }
+        let len = len + 1;
+        return true;
+    }
+
+    /** Func pop head value. Returns -1 if queue is empty. */
+    method int pop()
+    {
+        var int val;
+        var int newCap;
+        if (len = 0) {
+            return -1; // queue is empty
+        }
+        let val = data[head];
+        let head = head + 1;
+        if (~(head < cap)) {
+            let head = 0;
+        }
+        let len = len - 1;
+        if ((len * 4) < cap) {
+            if (cap > 4) {
+                let newCap = Math.divide(cap, 2);
+                if (newCap < 4) {
+                    let newCap = 4;
+                }
+                do resize(newCap);
+            }
+        }
+        return val;
+    }
+
+    /** Func return true if queue is empty */
+    method boolean isEmpty()
+    {
+        if (len = 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Func return the size of the queue */
+    method int size()
+    {
+        return len;
+    }
+
+    /**Func resize the array representing the queue according to new capacity.
+    Func copy all the old elements to the new array in the new size*/
+    method void resize(int newCap)
+    {
+        var Array newData;
+        var Array oldData;
+        var int oldCap;
+        var int i, idx;
+        let newData = Array.new(newCap);
+        let oldCap = cap;
+        let oldData = data;
+
+        // copy existing elements  data[(head + i) % oldCap] -> newData[i]
+        let i = 0;
+        while (i < len) {
+            let idx = head + i;
+            if (~(idx < oldCap)) {
+                let idx = idx - oldCap;
+            }
+            let newData[i] = oldData[idx];
+            let i = i + 1;
+        }
+        let data = newData;
+        let cap  = newCap;
+        let head = 0;
+        let tail = len;
+        do oldData.dispose(); // free old array
+        return;
+    }
+
+    /** Func deallocates the queue */
+    method void dispose()
+    {
+        do data.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+}
