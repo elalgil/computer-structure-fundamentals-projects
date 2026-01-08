@@ -41,7 +41,7 @@ function int solve(int a, int b) {
     return sum;
 }
 ```
-ת
+**Output (VM Language):**
 ```VM Language
 function Main.solve 1   // 1 local variable (sum)
 push argument 0         // push a
