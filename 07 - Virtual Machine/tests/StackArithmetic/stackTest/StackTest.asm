@@ -1,0 +1,733 @@
+    @17
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @17
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// eq
+@SP
+A=M-1
+D=M
+@POSEY1StackTest
+D;JGE
+(NEGY1StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN1StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE1StackTest
+D;JNE
+@PUSHFALSE1StackTest
+0;JMP
+(POSEY1StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN1StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE1StackTest
+D;JNE
+@PUSHTRUE1StackTest
+0;JMP
+(SAMESIGN1StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE1StackTest
+D;JNE
+(PUSHTRUE1StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE1StackTest
+0;JMP
+(PUSHFALSE1StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE1StackTest)
+@SP
+M=M-1
+    @17
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @16
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// eq
+@SP
+A=M-1
+D=M
+@POSEY2StackTest
+D;JGE
+(NEGY2StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN2StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE2StackTest
+D;JNE
+@PUSHFALSE2StackTest
+0;JMP
+(POSEY2StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN2StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE2StackTest
+D;JNE
+@PUSHTRUE2StackTest
+0;JMP
+(SAMESIGN2StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE2StackTest
+D;JNE
+(PUSHTRUE2StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE2StackTest
+0;JMP
+(PUSHFALSE2StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE2StackTest)
+@SP
+M=M-1
+    @16
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @17
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// eq
+@SP
+A=M-1
+D=M
+@POSEY3StackTest
+D;JGE
+(NEGY3StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN3StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE3StackTest
+D;JNE
+@PUSHFALSE3StackTest
+0;JMP
+(POSEY3StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN3StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE3StackTest
+D;JNE
+@PUSHTRUE3StackTest
+0;JMP
+(SAMESIGN3StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE3StackTest
+D;JNE
+(PUSHTRUE3StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE3StackTest
+0;JMP
+(PUSHFALSE3StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE3StackTest)
+@SP
+M=M-1
+    @892
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @891
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// lt
+@SP
+A=M-1
+D=M
+@POSEY4StackTest
+D;JGE
+(NEGY4StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN4StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE4StackTest
+D;JGE
+@PUSHFALSE4StackTest
+0;JMP
+(POSEY4StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN4StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE4StackTest
+D;JGE
+@PUSHTRUE4StackTest
+0;JMP
+(SAMESIGN4StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE4StackTest
+D;JGE
+(PUSHTRUE4StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE4StackTest
+0;JMP
+(PUSHFALSE4StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE4StackTest)
+@SP
+M=M-1
+    @891
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @892
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// lt
+@SP
+A=M-1
+D=M
+@POSEY5StackTest
+D;JGE
+(NEGY5StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN5StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE5StackTest
+D;JGE
+@PUSHFALSE5StackTest
+0;JMP
+(POSEY5StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN5StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE5StackTest
+D;JGE
+@PUSHTRUE5StackTest
+0;JMP
+(SAMESIGN5StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE5StackTest
+D;JGE
+(PUSHTRUE5StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE5StackTest
+0;JMP
+(PUSHFALSE5StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE5StackTest)
+@SP
+M=M-1
+    @891
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @891
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// lt
+@SP
+A=M-1
+D=M
+@POSEY6StackTest
+D;JGE
+(NEGY6StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN6StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE6StackTest
+D;JGE
+@PUSHFALSE6StackTest
+0;JMP
+(POSEY6StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN6StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE6StackTest
+D;JGE
+@PUSHTRUE6StackTest
+0;JMP
+(SAMESIGN6StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE6StackTest
+D;JGE
+(PUSHTRUE6StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE6StackTest
+0;JMP
+(PUSHFALSE6StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE6StackTest)
+@SP
+M=M-1
+    @32767
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @32766
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// gt
+@SP
+A=M-1
+D=M
+@POSEY7StackTest
+D;JGE
+(NEGY7StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN7StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE7StackTest
+D;JLE
+@PUSHFALSE7StackTest
+0;JMP
+(POSEY7StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN7StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE7StackTest
+D;JLE
+@PUSHTRUE7StackTest
+0;JMP
+(SAMESIGN7StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE7StackTest
+D;JLE
+(PUSHTRUE7StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE7StackTest
+0;JMP
+(PUSHFALSE7StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE7StackTest)
+@SP
+M=M-1
+    @32766
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @32767
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// gt
+@SP
+A=M-1
+D=M
+@POSEY8StackTest
+D;JGE
+(NEGY8StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN8StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE8StackTest
+D;JLE
+@PUSHFALSE8StackTest
+0;JMP
+(POSEY8StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN8StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE8StackTest
+D;JLE
+@PUSHTRUE8StackTest
+0;JMP
+(SAMESIGN8StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE8StackTest
+D;JLE
+(PUSHTRUE8StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE8StackTest
+0;JMP
+(PUSHFALSE8StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE8StackTest)
+@SP
+M=M-1
+    @32766
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @32766
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// gt
+@SP
+A=M-1
+D=M
+@POSEY9StackTest
+D;JGE
+(NEGY9StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN9StackTest
+D;JLT
+// x>= 0 and y<0 - always true for gt (jump_type JLE), always false for lt (jump_type JGE) 
+@SP
+A=M-1
+D=M
+@PUSHTRUE9StackTest
+D;JLE
+@PUSHFALSE9StackTest
+0;JMP
+(POSEY9StackTest)
+@SP
+A=M-1
+A=A-1
+D=M
+@SAMESIGN9StackTest
+D;JGE
+// y>= 0 and x<0 - always false for gt (jump_type JLE), always true for lt (jump_type JGE)
+@SP
+A=M-1
+A=A-1
+D=M
+@PUSHFALSE9StackTest
+D;JLE
+@PUSHTRUE9StackTest
+0;JMP
+(SAMESIGN9StackTest)
+@SP
+A=M-1
+D=M
+A=A-1
+D=M-D
+@PUSHFALSE9StackTest
+D;JLE
+(PUSHTRUE9StackTest)
+@SP
+D=M-1
+A=D-1
+M=-1
+@CONTINUE9StackTest
+0;JMP
+(PUSHFALSE9StackTest)
+@SP
+D=M-1
+A=D-1
+M=0
+(CONTINUE9StackTest)
+@SP
+M=M-1
+    @57
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @31
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+    @53
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// add
+@SP
+AM=M-1
+D=M
+A=A-1
+M=M+D
+    @112
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// sub
+@SP
+AM=M-1
+D=M
+A=A-1
+M=M-D
+// neg
+@SP
+A=M-1
+M=-M
+// and
+@SP
+AM=M-1
+D=M
+A=A-1
+M=M&D
+    @82
+    D=A
+    @SP
+    A=M
+    M=D
+    @SP
+    M=M+1
+// or
+@SP
+AM=M-1
+D=M
+A=A-1
+M=M|D
+// not
+@SP
+A=M-1
+M=!M
