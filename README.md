@@ -78,4 +78,23 @@ Through this project, I gained hands-on experience in core Computer Science and 
 computer-structure-fundamentals-projects/
 ├── I. Hardware Platform (HDL)
 │   ├── 01-Boolean-Logic/          # Logic Gates (Not, And, Or, Xor, Mux)
+│   ├── 02-Boolean-Arithmetic/     # Half/Full Adder, Inc16, ALU
+│   ├── 03-Sequential-Logic/       # Flip-Flops, Registers, RAM8-RAM16K, PC
+│   ├── 04-Machine-Language/       # Assembly code (Mult, I/O drivers)
+│   └── 05-Computer-Architecture/  # CPU, Memory, and the complete Computer chip
+│
+├── II. System Software (Python)
+│   ├── 06-Assembler/              # Logic to translate .asm to .hack binary
+│   ├── 07-VM-Translator-I/        # Stack arithmetic & memory segments
+│   ├── 08-VM-Translator-II/       # Control flow (branching) & Function call stack
+│   ├── 10-Compiler-Syntax/        # Tokenizer & Parser (outputs XML structure)
+│   └── 11-Compiler-Code-Gen/      # Full compilation to VM code (Symbol Tables)
+│
+└── III. High-Level Applications (Jack Language)
+    ├── 09-The-Maze-Game/          # A complex game featuring AI (BFS) and custom graphics
+    └── 12-Operating-System/       # The Standard Library (Math, Screen, String, Memory, etc.)
+
+## Aוuther
+Developed by Elal Gilboa as part of the Nand2Tetris certification.
+│   ├── 01-Boolean-Logic/          # Logic Gates (Not, And, Or, Xor, Mux)
 │   ├── 02-
