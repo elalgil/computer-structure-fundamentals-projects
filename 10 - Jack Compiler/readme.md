@@ -32,6 +32,35 @@ To comply with the course's strict submission requirements (which run on a Linux
 
 ## XML Output Example
 Here is an example of how the analyzer translates a simple Jack snippet into XML.
+**Example Output (`Main.xml`):**
+
+```xml
+<class>
+  <keyword> class </keyword>
+  <identifier> Main </identifier>
+  <symbol> { </symbol>
+  <subroutineDec>
+    <keyword> function </keyword>
+    <keyword> void </keyword>
+    <identifier> main </identifier>
+    <symbol> ( </symbol>
+    <parameterList>
+    </parameterList>
+    <symbol> ) </symbol>
+    <subroutineBody>
+      <symbol> { </symbol>
+      <statements>
+        <returnStatement>
+          <keyword> return </keyword>
+          <symbol> ; </symbol>
+        </returnStatement>
+      </statements>
+      <symbol> } </symbol>
+    </subroutineBody>
+  </subroutineDec>
+  <symbol> } </symbol>
+</class>
+```
 
 **Input (`Main.jack`):**
 ```jack
