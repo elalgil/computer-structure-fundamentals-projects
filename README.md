@@ -95,5 +95,5 @@ computer-structure-fundamentals-projects/
     └── 12-Operating-System/       # The Standard Library (Math, Screen, String, Memory, etc.)
 ```
 
-## Aוuther
+## Auther
 Developed by Elal Gilboa as part of the Nand2Tetris certification.
